@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huang.ssmdemo.mapper.UserMapper">
+
+    <!--column不做限制，可以为任意表的字段，而property须为type 定义的pojo属性-->
+    <resultMap id="map" type="com.huang.ssmdemo.pojo.User">
+        <id column="id"  property="id" />
+        <result column="name" property="name"/>
+        <result column="password" property="password"/>
+        <association property="userType" javaType="com.huang.ssmdemo.pojo.UserType">
+            <id column="id" property="id"/>
+            <result property="typeName" column="type"/>
+        </association>
+    </resultMap>
+
+    <select id="showAll"  resultMap="map">
+        <!-- 用include标签引入sql片段，refid写定义sql片段的id，where标签不要写在片段里 -->
+        select * from tb_user, tb_type where tb_user.type_id = tb_type.id
+    </select>
+
+    <delete id="delete" >
+        delete from tb_user where id = #{id}
+    </delete>
+
+    <insert id="add" >
+        insert into tb_user values(null, #{name}, #{password},#{type} )
+    </insert>
+
+</mapper>
